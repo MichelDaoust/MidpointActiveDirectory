@@ -16,3 +16,11 @@
 /MidPointEncryption/Debug
 /old.git/logs
 /old.git/objects
+/ConsoleApplicationTest/Release
+/MidPointEncryption/Release
+/MidPointPasswordFilter/Release
+/MidPointPasswordFilterEncryptor/Release
+/Release
+/MidPointPasswordFilterProcessor/bin/Release
+/MidPointPasswordFilterInstaller.CustomInstaller/bin/x86/Release
+/MidPointPasswordFilterInstaller.CustomInstaller/bin/x86/Debug
