@@ -1,0 +1,668 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:tns="http://midpoint.evolveum.com/xml/ns/public/common/common-3" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:t="http://prism.evolveum.com/xml/ns/public/types-3" xmlns:a="http://prism.evolveum.com/xml/ns/public/annotation-3" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" xmlns:c="http://midpoint.evolveum.com/xml/ns/public/common/common-3" elementFormDefault="qualified" targetNamespace="http://midpoint.evolveum.com/xml/ns/public/common/common-3" jaxb:extensionBindingPrefixes="xjc" jaxb:version="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:import schemaLocation="../annotation-3.xsd" namespace="http://prism.evolveum.com/xml/ns/public/annotation-3" />
+  <xsd:import schemaLocation="../types-3.xsd" namespace="http://prism.evolveum.com/xml/ns/public/types-3" />
+  <xsd:include schemaLocation="common-core-3.xsd" />
+  <xsd:annotation>
+    <xsd:documentation>
+            TODO
+        </xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType name="LensContextType">
+    <xsd:annotation>
+      <xsd:documentation>
+                A serialization of model context, i.e. a context of an operation in the model.
+                In particular, this type is storing data for LensContext class.
+            </xsd:documentation>
+      <xsd:appinfo>
+        <a:container xmlns:a="http://prism.evolveum.com/xml/ns/public/annotation-3" />
+      </xsd:appinfo>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="state" type="c:ModelStateType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        TODO
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="channel" type="xsd:anyURI">
+        <xsd:annotation>
+          <xsd:documentation>
+                        TODO
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="focusContext" type="c:LensFocusContextType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        TODO
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="projectionContext" type="c:LensProjectionContextType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        TODO
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="focusClass" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+                        TODO
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="projectionClass" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+                        TODO
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="doReconciliationForAllProjections" type="xsd:boolean">
+        <xsd:annotation>
+          <xsd:documentation>
+                        True if we want to reconcile all accounts in this context.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="executionPhaseOnly" type="xsd:boolean">
+        <xsd:annotation>
+          <xsd:documentation>
+                        If set to true then all operations are considered to be
+						in execution phase - for the purpose of authorizations and auditing.
+						This is used in case that the whole operation (context) is a
+						secondary change, e.g. in case that persona is provisioned. 
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="projectionWave" type="xsd:int">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Current wave of computation and execution.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="executionWave" type="xsd:int">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Current wave of execution.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="options" type="c:ModelExecuteOptionsType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        TODO
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="lazyAuditRequest" type="xsd:boolean" />
+      <xsd:element minOccurs="0" name="requestAudited" type="xsd:boolean" />
+      <xsd:element minOccurs="0" name="executionAudited" type="xsd:boolean" />
+      <xsd:element minOccurs="0" name="requestAuthorized" type="xsd:boolean" />
+      <xsd:element minOccurs="0" name="stats" type="c:LensContextStatsType" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="rottenExecutedDeltas" type="c:LensObjectDeltaOperationType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        TODO
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="requestMetadata" type="c:MetadataType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Metadata of the request. Metadata recorded when the operation has started.
+						Currently only the requestTimestamp and requestorRef are meaningful. But
+						later other metadata may be used.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="LensElementContextType">
+    <xsd:annotation>
+      <xsd:documentation>
+                TODO
+            </xsd:documentation>
+      <xsd:appinfo>
+        <a:container />
+      </xsd:appinfo>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="objectOld" type="c:ObjectType">
+        <xsd:annotation>
+          <xsd:appinfo>
+            <a:objectReference>tns:objectOldRef</a:objectReference>
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="objectOldRef" type="c:ObjectReferenceType">
+        <xsd:annotation>
+          <xsd:appinfo>
+            <a:composite>true</a:composite>
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="objectNew" type="c:ObjectType">
+        <xsd:annotation>
+          <xsd:appinfo>
+            <a:objectReference>tns:objectNewRef</a:objectReference>
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="objectNewRef" type="c:ObjectReferenceType">
+        <xsd:annotation>
+          <xsd:appinfo>
+            <a:composite>true</a:composite>
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="primaryDelta" type="t:ObjectDeltaType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        TODO
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="secondaryDelta" type="t:ObjectDeltaType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        TODO
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="executedDeltas" type="c:LensObjectDeltaOperationType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        TODO
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="objectTypeClass" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+                        TODO
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="oid" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+                        TODO
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="iteration" type="xsd:int">
+        <xsd:annotation>
+          <xsd:documentation>
+                       TODO
+                   </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="iterationToken" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+                       TODO
+                   </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="synchronizationIntent" type="c:SynchronizationIntentType">
+        <xsd:annotation>
+          <xsd:documentation>
+                       Initial intent regarding the account. It indicated what the initiator of the operation WANTS TO DO with the context.
+                       If set to null then the decision is left to "the engine". Null is also a typical value
+                       when the context is created. It may be pre-set under some circumstances, e.g. if an account is being unlinked.
+                   </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="LensFocusContextType">
+    <xsd:annotation>
+      <xsd:documentation>
+                TODO
+            </xsd:documentation>
+      <xsd:appinfo>
+        <a:container />
+      </xsd:appinfo>
+    </xsd:annotation>
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="c:LensElementContextType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="secondaryDeltas" type="c:ObjectDeltaWavesType">
+            <xsd:annotation>
+              <xsd:documentation>
+                                TODO
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="lensFocusContext" type="c:LensFocusContextType" />
+  <xsd:complexType name="LensProjectionContextType">
+    <xsd:annotation>
+      <xsd:documentation>
+                TODO
+            </xsd:documentation>
+      <xsd:appinfo>
+        <a:container />
+      </xsd:appinfo>
+    </xsd:annotation>
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="c:LensElementContextType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="syncDelta" type="t:ObjectDeltaType">
+            <xsd:annotation>
+              <xsd:documentation>
+                                TODO
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="syncAbsoluteTrigger" type="xsd:boolean">
+            <xsd:annotation>
+              <xsd:documentation>
+                                TODO
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="wave" type="xsd:int">
+            <xsd:annotation>
+              <xsd:documentation>
+                                The wave in which this resource should be processed. Initial value of -1 means "undetermined".
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="resourceShadowDiscriminator" type="c:ShadowDiscriminatorType">
+            <xsd:annotation>
+              <xsd:documentation>
+                                Definition of account type.
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="fullShadow" type="xsd:boolean">
+            <xsd:annotation>
+              <xsd:documentation>
+                                TODO
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="isAssigned" type="xsd:boolean">
+            <xsd:annotation>
+              <xsd:documentation>
+                                True if the account is "legal" (assigned to the user). It may be false for accounts that are either
+                                found to be illegal by live sync, were unassigned from user, etc.
+                                If set to null the situation is not yet known. Null is a typical value when the context is constructed.
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="isAssignedOld" type="xsd:boolean">
+            <xsd:annotation>
+              <xsd:documentation>
+                                "Old" version of isAssigned.
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="isActive" type="xsd:boolean">
+            <xsd:annotation>
+              <xsd:documentation>
+                                True if the account should be part of the synchronization. E.g. outbound expression should be applied to it.
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="isLegal" type="xsd:boolean">
+            <xsd:annotation>
+              <xsd:documentation>
+                                True if there is a valid assignment for this projection and/or the policy allows such projection to exist.
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="isLegalOld" type="xsd:boolean">
+            <xsd:annotation>
+              <xsd:documentation>
+                                True if there is a valid assignment for this projection and/or the policy allows such projection to exist.
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="isExists" type="xsd:boolean">
+            <xsd:annotation>
+              <xsd:documentation>
+                                TODO
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="synchronizationPolicyDecision" type="c:SynchronizationPolicyDecisionType">
+            <xsd:annotation>
+              <xsd:documentation>
+                                Decision regarding the account. It indicated what the engine has DECIDED TO DO with the context.
+                                If set to null no decision was made yet. Null is also a typical value when the context is created.
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="doReconciliation" type="xsd:boolean">
+            <xsd:annotation>
+              <xsd:documentation>
+                                True if we want to reconcile account in this context.
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="synchronizationSituationDetected" type="c:SynchronizationSituationType">
+            <xsd:annotation>
+              <xsd:documentation>
+                                TODO
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="synchronizationSituationResolved" type="c:SynchronizationSituationType">
+            <xsd:annotation>
+              <xsd:documentation>
+                                TODO
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="accountPasswordPolicy" type="c:ValuePolicyType">
+            <xsd:annotation>
+              <xsd:appinfo>
+                <a:objectReference>tns:accountPasswordPolicyRef</a:objectReference>
+              </xsd:appinfo>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="accountPasswordPolicyRef" type="c:ObjectReferenceType">
+            <xsd:annotation>
+              <xsd:appinfo>
+                <a:objectReferenceTargetType>c:ValuePolicyType</a:objectReferenceTargetType>
+                <a:composite>true</a:composite>
+              </xsd:appinfo>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="lensProjectionContext" type="c:LensProjectionContextType" />
+  <xsd:complexType name="ObjectDeltaWavesType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="wave" type="c:ObjectDeltaWaveType" />
+    </xsd:sequence>
+    <xsd:attribute name="waveCount" type="xsd:int" />
+  </xsd:complexType>
+  <xsd:complexType name="ObjectDeltaWaveType">
+    <xsd:annotation>
+      <xsd:documentation>
+                TODO
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="delta" type="t:ObjectDeltaType" />
+    </xsd:sequence>
+    <xsd:attribute name="number" type="xsd:int" />
+  </xsd:complexType>
+  <xsd:complexType name="LensObjectDeltaOperationType">
+    <xsd:annotation>
+      <xsd:documentation>
+                TODO
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="objectDeltaOperation" type="c:ObjectDeltaOperationType" />
+      <xsd:element name="audited" type="xsd:boolean" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:element name="modelContext" type="c:LensContextType">
+    <xsd:annotation>
+      <xsd:documentation>
+                TODO
+            </xsd:documentation>
+      <xsd:appinfo>
+        <a:indexed>false</a:indexed>
+        <a:minOccurs>0</a:minOccurs>
+        <a:maxOccurs>1</a:maxOccurs>
+      </xsd:appinfo>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="skipModelContextProcessing" type="xsd:boolean">
+    <xsd:annotation>
+      <xsd:documentation>
+                TODO
+            </xsd:documentation>
+      <xsd:appinfo>
+        <a:minOccurs>0</a:minOccurs>
+        <a:maxOccurs>1</a:maxOccurs>
+      </xsd:appinfo>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:complexType name="LensContextStatsType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="requestTimestamp" type="xsd:dateTime" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="EvaluatedPolicyRuleTriggerType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="ref" type="xsd:int" />
+      <xsd:element minOccurs="0" name="triggerId" type="xsd:int" />
+      <xsd:element minOccurs="0" name="ruleName" type="xsd:string" />
+      <xsd:element minOccurs="0" name="constraintName" type="xsd:string" />
+      <xsd:element minOccurs="0" name="constraintKind" type="c:PolicyConstraintKindType" />
+      <xsd:element minOccurs="0" name="constraint" type="c:AbstractPolicyConstraintType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        DEPRECATED. DO NOT USE.
+                    </xsd:documentation>
+          <xsd:appinfo>
+            <a:deprecated>true</a:deprecated>
+            <a:deprecatedSince>3.7</a:deprecatedSince>
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="message" type="c:LocalizableMessageType" />
+      <xsd:element minOccurs="0" name="shortMessage" type="c:LocalizableMessageType" />
+      <xsd:element minOccurs="0" name="presentationOrder" type="xsd:int" />
+      <xsd:element minOccurs="0" name="final" type="xsd:boolean" />
+      <xsd:element minOccurs="0" name="hidden" type="xsd:boolean" />
+      <xsd:element minOccurs="0" name="assignmentPath" type="c:AssignmentPathType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        DEPRECATED. Moved to EvaluatedPolicyRuleType. DO NOT USE.
+                    </xsd:documentation>
+          <xsd:appinfo>
+            <a:deprecated>true</a:deprecated>
+            <a:deprecatedSince>3.7</a:deprecatedSince>
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="directOwnerRef" type="c:ObjectReferenceType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        DEPRECATED. Moved to EvaluatedPolicyRuleType. DO NOT USE.
+                    </xsd:documentation>
+          <xsd:appinfo>
+            <a:deprecated>true</a:deprecated>
+            <a:deprecatedSince>3.7</a:deprecatedSince>
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="directOwnerDisplayName" type="t:PolyStringType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        DEPRECATED. Moved to EvaluatedPolicyRuleType. DO NOT USE.
+                    </xsd:documentation>
+          <xsd:appinfo>
+            <a:deprecated>true</a:deprecated>
+            <a:deprecatedSince>3.7</a:deprecatedSince>
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:element name="evaluatedPolicyRuleTrigger" type="c:EvaluatedPolicyRuleTriggerType" />
+  <xsd:complexType name="EvaluatedStateTriggerType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="c:EvaluatedPolicyRuleTriggerType">
+        <xsd:sequence />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="evaluatedStateTrigger" type="c:EvaluatedStateTriggerType" />
+  <xsd:complexType name="EvaluatedHasAssignmentTriggerType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="c:EvaluatedPolicyRuleTriggerType">
+        <xsd:sequence />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="evaluatedHasAssignmentTrigger" type="c:EvaluatedHasAssignmentTriggerType" />
+  <xsd:complexType name="EvaluatedMultiplicityTriggerType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="c:EvaluatedPolicyRuleTriggerType">
+        <xsd:sequence />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="evaluatedMultiplicityTrigger" type="c:EvaluatedMultiplicityTriggerType" />
+  <xsd:complexType name="EvaluatedTimeValidityTriggerType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="c:EvaluatedPolicyRuleTriggerType">
+        <xsd:sequence />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="evaluatedTimeValidityTrigger" type="c:EvaluatedTimeValidityTriggerType" />
+  <xsd:complexType name="EvaluatedModificationTriggerType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="c:EvaluatedPolicyRuleTriggerType">
+        <xsd:sequence />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="evaluatedModificationTrigger" type="c:EvaluatedModificationTriggerType" />
+  <xsd:complexType name="EvaluatedEmbeddingTriggerType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="c:EvaluatedPolicyRuleTriggerType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="embedded" type="c:EvaluatedPolicyRuleTriggerType" />
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="EvaluatedTransitionTriggerType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="c:EvaluatedEmbeddingTriggerType">
+        <xsd:sequence />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="evaluatedTransitionTrigger" type="c:EvaluatedTransitionTriggerType" />
+  <xsd:complexType name="EvaluatedLogicalTriggerType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="c:EvaluatedEmbeddingTriggerType">
+        <xsd:sequence />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="evaluatedLogicalTrigger" type="c:EvaluatedLogicalTriggerType" />
+  <xsd:complexType name="EvaluatedExclusionTriggerType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="c:EvaluatedPolicyRuleTriggerType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="conflictingObjectRef" type="c:ObjectReferenceType" />
+          <xsd:element minOccurs="0" name="conflictingObjectDisplayName" type="t:PolyStringType" />
+          <xsd:element minOccurs="0" name="conflictingObjectPath" type="c:AssignmentPathType" />
+          <xsd:element minOccurs="0" name="conflictingAssignment" type="c:AssignmentType" />
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="evaluatedExclusionTrigger" type="c:EvaluatedExclusionTriggerType" />
+  <xsd:complexType name="EvaluatedSituationTriggerType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="c:EvaluatedPolicyRuleTriggerType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="sourceRule" type="c:EvaluatedPolicyRuleType" />
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="evaluatedSituationTrigger" type="c:EvaluatedSituationTriggerType" />
+  <xsd:complexType name="EvaluatedPolicyRuleType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="policyRule" type="c:PolicyRuleType">
+        <xsd:annotation>
+          <xsd:documentation>
+						DO NOT USE
+
+						Keeping only because some "pre-3.6" code stored some data here. So we're not deleting
+						it to avoid schema exceptions.
+						Will be replaced by something more compact in the future (something like a reference to the rule).
+					</xsd:documentation>
+          <xsd:appinfo>
+            <a:deprecated>true</a:deprecated>
+            <a:deprecatedSince>3.6</a:deprecatedSince>
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="ruleName" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+                        TODO
+                    </xsd:documentation>
+          <xsd:appinfo>
+            <a:since>3.7</a:since>
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="assignmentPath" type="c:AssignmentPathType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        TODO
+                    </xsd:documentation>
+          <xsd:appinfo>
+            <a:since>3.7</a:since>
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="directOwnerRef" type="c:ObjectReferenceType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        TODO
+                    </xsd:documentation>
+          <xsd:appinfo>
+            <a:since>3.7</a:since>
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="directOwnerDisplayName" type="t:PolyStringType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        TODO
+                    </xsd:documentation>
+          <xsd:appinfo>
+            <a:since>3.7</a:since>
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="trigger" type="c:EvaluatedPolicyRuleTriggerType" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:element name="evaluatedPolicyRule" type="c:EvaluatedPolicyRuleType" />
+  <xsd:complexType name="AssignmentPathType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="segment" type="c:AssignmentPathSegmentType" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="AssignmentPathSegmentType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="sourceRef" type="c:ObjectReferenceType" />
+      <xsd:element minOccurs="0" name="sourceDisplayName" type="t:PolyStringType" />
+      <xsd:element minOccurs="0" name="assignment" type="c:AssignmentType" />
+      <xsd:element minOccurs="0" name="assignmentId" type="xsd:long" />
+      <xsd:element minOccurs="0" name="targetRef" type="c:ObjectReferenceType" />
+      <xsd:element minOccurs="0" name="targetDisplayName" type="t:PolyStringType" />
+      <xsd:element minOccurs="0" name="matchingOrder" type="xsd:boolean" />
+      <xsd:element minOccurs="0" name="isAssignment" type="xsd:boolean" />
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>

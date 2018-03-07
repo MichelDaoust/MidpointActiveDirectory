@@ -1,0 +1,18 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/MidPointPasswordFilterInstaller.CustomInstaller/obj
+/MidPointPasswordFilter/x64/Debug
+/MidPointPasswordFilterEncryptor/Debug
+/MidPointPasswordFilterInstaller/Debug
+/MidPointPasswordFilterInstaller.CustomInstaller/bin/Debug
+/MidPointPasswordFilterProcessor/bin/Debug
+/MidPointPasswordFilterProcessor/obj
+/x64/Debug
+/.vs/MidPointPasswordFilter/v15
+/ConsoleApplicationTest/Debug
+/Debug
+/MidPointEncryption/Debug
+/old.git/logs
+/old.git/objects

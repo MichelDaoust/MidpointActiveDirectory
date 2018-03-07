@@ -1,0 +1,1107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:tns="http://midpoint.evolveum.com/xml/ns/public/common/common-3" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:t="http://prism.evolveum.com/xml/ns/public/types-3" xmlns:a="http://prism.evolveum.com/xml/ns/public/annotation-3" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" xmlns:c="http://midpoint.evolveum.com/xml/ns/public/common/common-3" elementFormDefault="qualified" targetNamespace="http://midpoint.evolveum.com/xml/ns/public/common/common-3" jaxb:extensionBindingPrefixes="xjc" jaxb:version="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:import schemaLocation="../annotation-3.xsd" namespace="http://prism.evolveum.com/xml/ns/public/annotation-3" />
+  <xsd:import schemaLocation="../types-3.xsd" namespace="http://prism.evolveum.com/xml/ns/public/types-3" />
+  <xsd:include schemaLocation="common-core-3.xsd" />
+  <xsd:annotation>
+    <xsd:documentation>
+            TODO
+        </xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType name="MailConfigurationType">
+    <xsd:annotation>
+      <xsd:documentation>
+                Where and how to send mail notifications (or any other mail messages).
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="server" type="c:MailServerConfigurationType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Configuration of a particular mail server host. If there are more of them, they are tried
+                        one after another. If there is none, mail notifications are not sent.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="defaultFrom" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+                        What to put into "From" field of mail messages (unless overriden by specific situation).
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="debug" type="xsd:boolean">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Enables quite crude debugging of javamail - sending diagnostics to standard output (console).
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="redirectToFile" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Instead of sending mail via SMTP, writes all messages to a file. Useful for debugging.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="logToFile" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+                        In addition to sending mail via SMTP, writes all messages to a file. Useful for debugging.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="MailServerConfigurationType">
+    <xsd:annotation>
+      <xsd:documentation>
+                Configuration of a particular mail server host.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="host" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Mail server host (FQDN or IP address).
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="port" type="xsd:int">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Mail server port (25 by default).
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="username" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+                        How to authenticate to the mail server.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="password" type="t:ProtectedStringType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        How to authenticate to the mail server.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="transportSecurity" type="c:MailTransportSecurityType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        How to ensure transport-level security when sending the message.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:simpleType name="MailTransportSecurityType">
+    <xsd:annotation>
+      <xsd:documentation>
+                How to ensure transport-level security when sending the message.
+                SSL/STARTTLS settings are currently EXPERIMENTAL (e.g. there is no support
+                for setting certificate validation-related properties; default behavior
+                of javax.mail implementation is used).
+            </xsd:documentation>
+      <xsd:appinfo>
+        <jaxb:typesafeEnumClass xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" />
+      </xsd:appinfo>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="none">
+        <xsd:annotation>
+          <xsd:documentation>
+                        No attempts to ensure transport security.
+                    </xsd:documentation>
+          <xsd:appinfo>
+            <jaxb:typesafeEnumMember name="NONE" />
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="starttlsEnabled">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Uses STARTTLS feature, if available on the server.
+                    </xsd:documentation>
+          <xsd:appinfo>
+            <jaxb:typesafeEnumMember name="STARTTLS_ENABLED" />
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="starttlsRequired">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Uses STARTTLS feature. If it is not available on the server, the mesage sending fails.
+                    </xsd:documentation>
+          <xsd:appinfo>
+            <jaxb:typesafeEnumMember name="STARTTLS_REQUIRED" />
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="ssl">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Employs (older) mechanism of using SSL/TLS - wraps whole SMTP connection in SSL/TLS.
+                    </xsd:documentation>
+          <xsd:appinfo>
+            <jaxb:typesafeEnumMember name="SSL" />
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:enumeration>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="NamedConfigurationType">
+    <xsd:attribute name="name" type="xsd:string" />
+  </xsd:complexType>
+  <xsd:complexType name="SmsConfigurationType">
+    <xsd:annotation>
+      <xsd:documentation>
+                Where and how to send SMS notifications (or any other SMS).
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="gateway" type="c:SmsGatewayConfigurationType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Configuration of a particular mail server host. If there are more of them, they are tried
+                        one after another. If there is none, mail notifications are not sent.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="defaultFrom" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+                        What to put into "From" field of SMS, if supported by the gateway.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="redirectToFile" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Instead of sending messages via SMS, writes all messages to a file. Useful for debugging.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="logToFile" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+                        In addition to sending messages via SMS, writes all messages to a file. Useful for debugging.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="name" type="xsd:string" />
+  </xsd:complexType>
+  <xsd:complexType name="FileConfigurationType">
+    <xsd:annotation>
+      <xsd:documentation>
+                Where and how to store "file" notifications.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="c:NamedConfigurationType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="file" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+                                File to store notifications into.
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CustomTransportConfigurationType">
+    <xsd:annotation>
+      <xsd:documentation>
+                TODO
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="1" name="expression" type="c:ExpressionType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Expression that processes incoming message.
+						Expects a single-valued "message" variable. (If really needed, "event" variable is also available.)
+						Should not return anything.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="redirectToFile" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+						Instead of executing the expression, writes all messages to a file. Useful for debugging.
+					</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="logToFile" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+						In addition to executing the expression, writes all messages to a file. Useful for debugging.
+					</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="name" type="xsd:string" />
+  </xsd:complexType>
+  <xsd:complexType name="SmsGatewayConfigurationType">
+    <xsd:annotation>
+      <xsd:documentation>
+                Configuration of a particular SMS gateway.
+
+                Currently, we only support sending via HTTP GET method.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="url" type="c:ExpressionType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        How to construct URL used to send SMS.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="username" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+                        How to authenticate to the SMS gateway.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="password" type="t:ProtectedStringType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        How to authenticate to the SMS gateway.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="redirectToFile" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Instead of opening HTTP connection, writes the URL to this file. Useful for debugging.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="name" type="xsd:string" />
+  </xsd:complexType>
+  <xsd:complexType name="NotificationConfigurationType">
+    <xsd:annotation>
+      <xsd:documentation>
+                A configuration for user notifications. It defines how should be notifications created in various
+                situations, e.g. when an account is created or removed.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="handler" type="c:EventHandlerType" />
+      <xsd:element minOccurs="0" name="mail" type="c:MailConfigurationType" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="sms" type="c:SmsConfigurationType" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="file" type="c:FileConfigurationType" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="customTransport" type="c:CustomTransportConfigurationType" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:element name="notificationConfiguration" type="c:NotificationConfigurationType" />
+  <xsd:complexType name="EventHandlerType">
+    <xsd:annotation>
+      <xsd:documentation>
+                An event handler. It can contain conditions (general expressions or lists of event categories, operation types,
+                success/failure statuses, and so on), subhandlers (chained or forked), and various kinds of notifiers.
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="name" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Symbolic name, used either as a comment or (in the future) maybe to reference the filter.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" name="description" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+                        A note about the filter, e.g. for the administrator.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="category" type="c:EventCategoryType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Event categories supported by this handler. (Default: all)
+                        Categories not listed are filtered out: not handled by this handler nor any of its successors.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="operation" type="c:EventOperationType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Operations supported by this handler. (Default: all)
+                        Operations not listed are filtered out: not handled by this handler nor any of its successors.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="status" type="c:EventStatusType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Result statuses supported by this handler. (Default: all)
+                        Statuses not listed are filtered out: not handled by this handler nor any of its successors.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="objectKind" type="c:ShadowKindType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Resource object kinds supported by this handler. (Default: all)
+                        Kinds not listed are filtered out: not handled by this handler nor any of its successors.
+                        (Relevant only for account-related events.)
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="objectIntent" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Resource object intents supported by this handler. (Default: all)
+                        Intents not listed are filtered out: not handled by this handler nor any of its successors.
+                        (Relevant only for account-related events.)
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="focusType" type="xsd:QName">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Focus types supported by this handler. (Default: all)
+                        Types not listed are filtered out: not handled by this handler nor any of its successors.
+                        (Relevant only for model-generated events.)
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="expressionFilter" type="c:ExpressionType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Expression that returns true (if the event is to be processed and passed further) or false (if it has to be thrown off).
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="chained" type="c:EventHandlerType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        A chain of handlers (usually filters and notifiers) to be evaluated, one after another.
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="forked" type="c:EventHandlerType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        A set of handlers to be evaluated without any relation among them (like a fork prongs).
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="simpleUserNotifier" type="c:SimpleUserNotifierType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        TODO
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="timeValidityNotifier" type="c:TimeValidityNotifierType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        TODO
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="simpleFocalObjectNotifier" type="c:SimpleFocalObjectNotifierType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        TODO
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="simpleResourceObjectNotifier" type="c:SimpleResourceObjectNotifierType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        TODO
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="simpleWorkflowNotifier" type="c:SimpleWorkflowNotifierType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        TODO
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="userPasswordNotifier" type="c:UserPasswordNotifierType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        TODO
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="userRegistrationNotifier" type="c:RegistrationConfirmationNotifierType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        TODO
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="passwordResetNotifier" type="c:PasswordResetNotifierType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        TODO
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="accountActivationNotifier" type="c:AccountActivationNotifierType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        TODO
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="accountPasswordNotifier" type="c:AccountPasswordNotifierType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        TODO
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="simpleCampaignNotifier" type="c:SimpleCampaignNotifierType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        TODO
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="simpleCampaignStageNotifier" type="c:SimpleCampaignStageNotifierType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        TODO
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="simpleReviewerNotifier" type="c:SimpleReviewerNotifierType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        TODO
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="simpleTaskNotifier" type="c:SimpleTaskNotifierType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        TODO
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="simplePolicyRuleNotifier" type="c:SimplePolicyRuleNotifierType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        TODO
+                    </xsd:documentation>
+          <xsd:appinfo>
+            <a:since xmlns:a="http://prism.evolveum.com/xml/ns/public/annotation-3">3.6</a:since>
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="generalNotifier" type="c:GeneralNotifierType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Here can go any notifiers (that extend GeneralNotifierType).
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="customNotifier" type="c:CustomNotifierType">
+        <xsd:annotation>
+          <xsd:documentation>
+                        TODO EXPERIMENTAL
+                    </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:simpleType name="EventCategoryType">
+    <xsd:annotation>
+      <xsd:documentation>
+                TODO
+            </xsd:documentation>
+      <xsd:appinfo>
+        <jaxb:typesafeEnumClass />
+      </xsd:appinfo>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="resourceObjectEvent">
+        <xsd:annotation>
+          <xsd:appinfo>
+            <jaxb:typesafeEnumMember name="RESOURCE_OBJECT_EVENT" />
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="modelEvent">
+        <xsd:annotation>
+          <xsd:appinfo>
+            <jaxb:typesafeEnumMember name="MODEL_EVENT" />
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="workItemEvent">
+        <xsd:annotation>
+          <xsd:appinfo>
+            <jaxb:typesafeEnumMember name="WORK_ITEM_EVENT" />
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="workItemLifecycleEvent">
+        <xsd:annotation>
+          <xsd:documentation>
+						Subtype of workItemEvent. Represents the fact that a work item was created or deleted.
+						Operation of ADD means that the work item was created.
+						Operation of DELETE means that the work item was deleted (usually because it was completed).
+					</xsd:documentation>
+          <xsd:appinfo>
+            <jaxb:typesafeEnumMember name="WORK_ITEM_LIFECYCLE_EVENT" />
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="workItemAllocationEvent">
+        <xsd:annotation>
+          <xsd:documentation>
+						Subtype of workItemEvent. Represents the fact that a work item was allocated to a user.
+						(Either automatically when it is created or delegated, or manually when the user has claimed the item.)
+						Operation of ADD means that the allocation was created.
+						Operation of MODIFY means that the allocation is about to be deleted (probably as part of timed
+						delegation/escalation or timed completion).
+						Operation of DELETE means that the allocation was deleted (because of task completion/deletion or delegation).
+					</xsd:documentation>
+          <xsd:appinfo>
+            <jaxb:typesafeEnumMember name="WORK_ITEM_ALLOCATION_EVENT" />
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="workItemCustomEvent">
+        <xsd:annotation>
+          <xsd:documentation>
+						Subtype of workItemEvent. Custom notification event emitted by "notify" timed action.
+					</xsd:documentation>
+          <xsd:appinfo>
+            <jaxb:typesafeEnumMember name="WORK_ITEM_CUSTOM_EVENT" />
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="workflowProcessEvent">
+        <xsd:annotation>
+          <xsd:appinfo>
+            <jaxb:typesafeEnumMember name="WORKFLOW_PROCESS_EVENT" />
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="workflowEvent">
+        <xsd:annotation>
+          <xsd:appinfo>
+            <jaxb:typesafeEnumMember name="WORKFLOW_EVENT" />
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="accessCertificationEvent">
+        <xsd:annotation>
+          <xsd:appinfo>
+            <jaxb:typesafeEnumMember name="ACCESS_CERTIFICATION_EVENT" />
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="certCampaignEvent">
+        <xsd:annotation>
+          <xsd:appinfo>
+            <jaxb:typesafeEnumMember name="CERT_CAMPAIGN_EVENT" />
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="certCampaignStageEvent">
+        <xsd:annotation>
+          <xsd:appinfo>
+            <jaxb:typesafeEnumMember name="CERT_CAMPAIGN_STAGE_EVENT" />
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="certCaseEvent">
+        <xsd:annotation>
+          <xsd:appinfo>
+            <jaxb:typesafeEnumMember name="CERT_CASE_EVENT" />
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="taskEvent">
+        <xsd:annotation>
+          <xsd:appinfo>
+            <jaxb:typesafeEnumMember name="TASK_EVENT" />
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="customEvent">
+        <xsd:annotation>
+          <xsd:appinfo>
+            <jaxb:typesafeEnumMember name="CUSTOM_EVENT" />
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="policyRuleEvent">
+        <xsd:annotation>
+          <xsd:appinfo>
+            <jaxb:typesafeEnumMember name="POLICY_RULE_EVENT" />
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:enumeration>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="EventStatusType">
+    <xsd:annotation>
+      <xsd:documentation>
+                TODO
+            </xsd:documentation>
+      <xsd:appinfo>
+        <jaxb:typesafeEnumClass />
+      </xsd:appinfo>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="success">
+        <xsd:annotation>
+          <xsd:appinfo>
+            <jaxb:typesafeEnumMember name="SUCCESS" />
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="alsoSuccess">
+        <xsd:annotation>
+          <xsd:appinfo>
+            <jaxb:typesafeEnumMember name="ALSO_SUCCESS" />
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="failure">
+        <xsd:annotation>
+          <xsd:appinfo>
+            <jaxb:typesafeEnumMember name="FAILURE" />
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="onlyFailure">
+        <xsd:annotation>
+          <xsd:appinfo>
+            <jaxb:typesafeEnumMember name="ONLY_FAILURE" />
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="inProgress">
+        <xsd:annotation>
+          <xsd:appinfo>
+            <jaxb:typesafeEnumMember name="IN_PROGRESS" />
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:enumeration>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="EventOperationType">
+    <xsd:annotation>
+      <xsd:documentation>
+                TODO
+            </xsd:documentation>
+      <xsd:appinfo>
+        <jaxb:typesafeEnumClass />
+      </xsd:appinfo>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="add">
+        <xsd:annotation>
+          <xsd:appinfo>
+            <jaxb:typesafeEnumMember name="ADD" />
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="modify">
+        <xsd:annotation>
+          <xsd:appinfo>
+            <jaxb:typesafeEnumMember name="MODIFY" />
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="delete">
+        <xsd:annotation>
+          <xsd:appinfo>
+            <jaxb:typesafeEnumMember name="DELETE" />
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:enumeration>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="GeneralNotifierType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="c:EventHandlerType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="fromExpression" type="c:ExpressionType">
+            <xsd:annotation>
+              <xsd:documentation>
+                                from address
+                                overwrites notificationConfiguration/mail/defaultFrom
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="recipientExpression" type="c:ExpressionType">
+            <xsd:annotation>
+              <xsd:documentation>
+                                Recipient(s) that should get the notifications. Exact form is to be determined yet,
+                                but here may be mail addresses, phone numbers, etc. We need to think how to distinguish
+                                these kinds of destinations.
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ccExpression" type="c:ExpressionType">
+            <xsd:annotation>
+              <xsd:documentation>
+                                cc Recipient(s) that should get the notifications.
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="bccExpression" type="c:ExpressionType">
+            <xsd:annotation>
+              <xsd:documentation>
+                                bcc Recipient(s) that should get the notifications.
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="contentTypeExpression" type="c:ExpressionType">
+            <xsd:annotation>
+              <xsd:documentation>
+                               contentType used in email
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="subjectExpression" type="c:ExpressionType">
+            <xsd:annotation>
+              <xsd:documentation>
+                                How to construct the subject of the message that is to be sent.
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="subjectPrefix" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+                                Simpler alternative to subjectExpression: the subject itself will be constructed by the notifier,
+                                but it will be prefixed by value specified here.
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="bodyExpression" type="c:ExpressionType">
+            <xsd:annotation>
+              <xsd:documentation>
+                                How to construct the body (text) of the message that is to be sent.
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="contentType" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+                                Body content type, e.g. text/plain (the default), text/html, and so on.
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="watchAuxiliaryAttributes" type="xsd:boolean">
+            <xsd:annotation>
+              <xsd:documentation>
+                                Whether to send a notification when only auxiliary attributes (namely: validityStatus,
+                                validityChangeTimestamp, effectiveStatus, disableTimestamp, modifyChannel, modifyTimestamp,
+                                modifierRef and maybe others) are modified. If set to false (default), these attributes
+                                are hidden from list of modified attributes as well.
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="showModifiedValues" type="xsd:boolean">
+            <xsd:annotation>
+              <xsd:documentation>
+                                Whether to show modified values (or only names of changed attributes). Default: true. (NOT IMPLEMENTED YET. THE NAME MIGHT CHANGE.)
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" name="showTechnicalInformation" type="xsd:boolean">
+            <xsd:annotation>
+              <xsd:documentation>
+                                Whether to show technical information (e.g. model context or account operation details).
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="transport" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="CustomNotifierType">
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="c:EventHandlerType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="expression" type="c:ExpressionType">
+            <xsd:annotation>
+              <xsd:documentation>
+                                Generates resulting NotificationMessageType object. Expects an "event" variable.
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="transport" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="SimpleResourceObjectNotifierType">
+    <xsd:annotation>
+      <xsd:documentation>
+                TODO
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="c:GeneralNotifierType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="watchSynchronizationAttributes" type="xsd:boolean">
+            <xsd:annotation>
+              <xsd:documentation>
+                                Whether to send a notification when only auxiliary attributes related to synchronization situation
+                                (synchronizationSituationDescription, synchronizationSituation) are modified.
+                            </xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="SimpleUserNotifierType">
+    <xsd:annotation>
+      <xsd:documentation>
+                TODO
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="c:SimpleFocalObjectNotifierType" />
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="TimeValidityNotifierType">
+    <xsd:annotation>
+      <xsd:documentation>
+                TODO
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="c:SimplePolicyRuleNotifierType" />
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="SimpleFocalObjectNotifierType">
+    <xsd:annotation>
+      <xsd:documentation>
+                TODO
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="c:GeneralNotifierType" />
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="SimpleWorkflowNotifierType">
+    <xsd:annotation>
+      <xsd:documentation>
+                TODO
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="c:GeneralNotifierType" />
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="UserPasswordNotifierType">
+    <xsd:annotation>
+      <xsd:documentation>
+                TODO
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="c:GeneralNotifierType" />
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="ConfirmationNotifierType">
+    <xsd:annotation>
+      <xsd:documentation>
+                TODO
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="c:GeneralNotifierType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" name="confirmationMethod" type="c:RegistrationConfirmationMethodType" />
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="RegistrationConfirmationNotifierType">
+    <xsd:annotation>
+      <xsd:documentation>
+                TODO
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="c:ConfirmationNotifierType" />
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="PasswordResetNotifierType">
+    <xsd:annotation>
+      <xsd:documentation>
+                TODO
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="c:ConfirmationNotifierType" />
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="AccountActivationNotifierType">
+    <xsd:annotation>
+      <xsd:documentation>
+                TODO
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="c:ConfirmationNotifierType" />
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="AccountPasswordNotifierType">
+    <xsd:annotation>
+      <xsd:documentation>
+                TODO
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="c:GeneralNotifierType" />
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="SimpleCampaignNotifierType">
+    <xsd:annotation>
+      <xsd:documentation>
+                TODO
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="c:GeneralNotifierType" />
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="SimpleCampaignStageNotifierType">
+    <xsd:annotation>
+      <xsd:documentation>
+                TODO
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="c:GeneralNotifierType" />
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="SimpleReviewerNotifierType">
+    <xsd:annotation>
+      <xsd:documentation>
+                TODO
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="c:GeneralNotifierType" />
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="SimpleTaskNotifierType">
+    <xsd:annotation>
+      <xsd:documentation>
+                TODO
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="c:GeneralNotifierType" />
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="SimplePolicyRuleNotifierType">
+    <xsd:annotation>
+      <xsd:documentation>
+                TODO
+            </xsd:documentation>
+      <xsd:appinfo>
+        <a:since xmlns:a="http://prism.evolveum.com/xml/ns/public/annotation-3">3.6</a:since>
+      </xsd:appinfo>
+    </xsd:annotation>
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="c:GeneralNotifierType" />
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="DummyNotifierType">
+    <xsd:annotation>
+      <xsd:documentation>
+                TODO
+            </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent mixed="false">
+      <xsd:extension base="c:GeneralNotifierType" />
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:simpleType name="RegistrationConfirmationMethodType">
+    <xsd:annotation>
+      <xsd:documentation>
+                How to ensure transport-level security when sending the message.
+                SSL/STARTTLS settings are currently EXPERIMENTAL (e.g. there is no support
+                for setting certificate validation-related properties; default behavior
+                of javax.mail implementation is used).
+            </xsd:documentation>
+      <xsd:appinfo>
+        <jaxb:typesafeEnumClass />
+      </xsd:appinfo>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="none">
+        <xsd:annotation>
+          <xsd:documentation>
+                        No validation method
+                    </xsd:documentation>
+          <xsd:appinfo>
+            <jaxb:typesafeEnumMember name="NONE" />
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="link">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Append LINK to the confirmation message which will be used to validate users
+                    </xsd:documentation>
+          <xsd:appinfo>
+            <jaxb:typesafeEnumMember name="LINK" />
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="pin">
+        <xsd:annotation>
+          <xsd:documentation>
+                        Append PIN to the confirmation message which will be used to validate users
+                    </xsd:documentation>
+          <xsd:appinfo>
+            <jaxb:typesafeEnumMember name="PIN" />
+          </xsd:appinfo>
+        </xsd:annotation>
+      </xsd:enumeration>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="NotificationMessageType">
+    <xsd:annotation>
+      <xsd:documentation>
+				XML version of Message (in notifications module).
+				Introduced in order to provide custom notifiers.
+				EXPERIMENTAL
+			</xsd:documentation>
+      <xsd:appinfo>
+        <a:since xmlns:a="http://prism.evolveum.com/xml/ns/public/annotation-3">3.6</a:since>
+      </xsd:appinfo>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="from" type="xsd:string" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="to" type="xsd:string" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="cc" type="xsd:string" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="bcc" type="xsd:string" />
+      <xsd:element minOccurs="0" name="subject" type="xsd:string" />
+      <xsd:element minOccurs="0" name="body" type="xsd:string" />
+      <xsd:element minOccurs="0" name="contentType" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xenc="http://www.w3.org/2001/04/xmlenc#" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:icfs="http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/resource-schema-3" xmlns:tns="http://midpoint.evolveum.com/xml/ns/public/common/common-3" xmlns:a="http://prism.evolveum.com/xml/ns/public/annotation-3" xmlns:q="http://prism.evolveum.com/xml/ns/public/query-3" xmlns:cap="http://midpoint.evolveum.com/xml/ns/public/resource/capabilities-3" xmlns:t="http://prism.evolveum.com/xml/ns/public/types-3" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" xmlns:c="http://midpoint.evolveum.com/xml/ns/public/common/common-3" elementFormDefault="qualified" targetNamespace="http://midpoint.evolveum.com/xml/ns/public/common/common-3" jaxb:extensionBindingPrefixes="xjc" jaxb:version="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:import schemaLocation="../annotation-3.xsd" namespace="http://prism.evolveum.com/xml/ns/public/annotation-3">
+    <xsd:annotation>
+      <xsd:documentation>
+                Common prism annotations used in various XSD schemas.
+            </xsd:documentation>
+    </xsd:annotation>
+  </xsd:import>
+  <xsd:import schemaLocation="../types-3.xsd" namespace="http://prism.evolveum.com/xml/ns/public/types-3">
+    <xsd:annotation>
+      <xsd:documentation>
+                Prism data types.
+            </xsd:documentation>
+    </xsd:annotation>
+  </xsd:import>
+  <xsd:import schemaLocation="../query-3.xsd" namespace="http://prism.evolveum.com/xml/ns/public/query-3">
+    <xsd:annotation>
+      <xsd:documentation>
+                Prism data types.
+            </xsd:documentation>
+    </xsd:annotation>
+  </xsd:import>
+  <xsd:import schemaLocation="../connector/icf-1/resource-schema-3.xsd" namespace="http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/resource-schema-3">
+    <xsd:annotation>
+      <xsd:documentation>
+                This is a hack. It should not be here. And it will be gone as soon as we remove a deprecated functionality
+                in ResourceObjectPatternType.
+            </xsd:documentation>
+    </xsd:annotation>
+  </xsd:import>
+  <xsd:include schemaLocation="common-core-3.xsd" />
+  <xsd:include schemaLocation="common-certification-3.xsd" />
+  <xsd:include schemaLocation="common-model-context-3.xsd" />
+  <xsd:include schemaLocation="common-notifications-3.xsd" />
+  <xsd:include schemaLocation="common-workflows-3.xsd" />
+  <xsd:include schemaLocation="common-policy-3.xsd" />
+  <xsd:include schemaLocation="common-case-management-3.xsd" />
+  <xsd:annotation>
+    <xsd:documentation>
+      <p>
+                This is a common schema for midPoint project. It contains all the
+                data types that the stock midPoint is using
+                This file contains more that a common schema in fact. It contains
+                all the objects, even parts of what is known as identity schema and
+                model schema in midPoint.
+            </p>
+
+            See
+            <a href="https://wiki.evolveum.com/display/midPoint/Data+Model">https://wiki.evolveum.com/display/midPoint/Data+Model</a>
+            for more details.
+
+            <p>Version: 3.7</p><p>Recommended namespace prefix: (default), c</p></xsd:documentation>
+    <xsd:appinfo>
+      <jaxb:globalBindings xmlns:jaxb="http://java.sun.com/xml/ns/jaxb">
+        <xjc:typeSubstitution type="complex" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" />
+        <xjc:serializable uid="201105211233" />
+      </jaxb:globalBindings>
+    </xsd:appinfo>
+  </xsd:annotation>
+</xsd:schema>

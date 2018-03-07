@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="9908a602-c73a-4834-a68c-ada551336f79" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="C:\midpoint-3.7\doc2\model-3.wsdl" Protocol="file" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="fault.wsdl" MetadataType="Wsdl" ID="cff46e0f-b935-4ab5-a093-9d8fc5e91e29" SourceId="1" SourceUrl="file:///C:/midpoint-3.7/common/fault-3.wsdl" />
+    <MetadataFile FileName="scripting-3.xsd" MetadataType="Schema" ID="63cec352-85a4-41e5-a5b0-3eba2b5b57b9" SourceId="1" SourceUrl="file:///C:/midpoint-3.7/model/scripting/scripting-3.xsd" />
+    <MetadataFile FileName="common-notifications-3.xsd" MetadataType="Schema" ID="b8c9ff23-b9ca-4547-9c8b-dee0d4917a8f" SourceId="1" SourceUrl="file:///C:/midpoint-3.7/common/common-notifications-3.xsd" />
+    <MetadataFile FileName="common-model-context-3.xsd" MetadataType="Schema" ID="03390079-ff14-4b05-982a-60404a150b81" SourceId="1" SourceUrl="file:///C:/midpoint-3.7/common/common-model-context-3.xsd" />
+    <MetadataFile FileName="query-3.xsd" MetadataType="Schema" ID="862fbfcc-915b-4dc3-8419-6b72e416c798" SourceId="1" SourceUrl="file:///C:/midpoint-3.7/query-3.xsd" />
+    <MetadataFile FileName="connector-schema-3.xsd" MetadataType="Schema" ID="5f2a2eb9-c1b4-4e78-ab3e-b217085ad6e7" SourceId="1" SourceUrl="file:///C:/midpoint-3.7/connector/icf-1/connector-schema-3.xsd" />
+    <MetadataFile FileName="common-case-management-3.xsd" MetadataType="Schema" ID="e60ee8a1-8f65-470e-bff9-44c4240e14d0" SourceId="1" SourceUrl="file:///C:/midpoint-3.7/common/common-case-management-3.xsd" />
+    <MetadataFile FileName="annotation-3.xsd" MetadataType="Schema" ID="0a8e19e9-003c-479e-b7b9-f081bf690bb6" SourceId="1" SourceUrl="file:///C:/midpoint-3.7/annotation-3.xsd" />
+    <MetadataFile FileName="common-workflows-3.xsd" MetadataType="Schema" ID="803ae0e0-f643-4fa3-b2f9-f3e12cea5420" SourceId="1" SourceUrl="file:///C:/midpoint-3.7/common/common-workflows-3.xsd" />
+    <MetadataFile FileName="resource-schema-3.xsd" MetadataType="Schema" ID="b537f021-f381-4846-80b0-a83a11496838" SourceId="1" SourceUrl="file:///C:/midpoint-3.7/connector/icf-1/resource-schema-3.xsd" />
+    <MetadataFile FileName="capabilities-3.xsd" MetadataType="Schema" ID="2f471cbc-0c3b-4527-9ca8-b5b48ec5685d" SourceId="1" SourceUrl="file:///C:/midpoint-3.7/resource/capabilities-3.xsd" />
+    <MetadataFile FileName="common-policy-3.xsd" MetadataType="Schema" ID="bd20fa82-38a2-4e0c-929c-d49dfd337c66" SourceId="1" SourceUrl="file:///C:/midpoint-3.7/common/common-policy-3.xsd" />
+    <MetadataFile FileName="model.wsdl" MetadataType="Wsdl" ID="7ae67561-7d67-4f62-a4f6-5cf1497545b2" SourceId="1" SourceUrl="file:///C:/midpoint-3.7/doc2/model-3.wsdl" />
+    <MetadataFile FileName="common-certification-3.xsd" MetadataType="Schema" ID="fbabf21e-7354-4ca8-9474-2856539b10de" SourceId="1" SourceUrl="file:///C:/midpoint-3.7/common/common-certification-3.xsd" />
+    <MetadataFile FileName="common-core-3.xsd" MetadataType="Schema" ID="e6cef9a4-1c90-4d85-a5e9-5940e9f361bc" SourceId="1" SourceUrl="file:///C:/midpoint-3.7/common/common-core-3.xsd" />
+    <MetadataFile FileName="api-types-3.xsd" MetadataType="Schema" ID="af79f0d1-178a-41e8-8b48-562b6f9646b5" SourceId="1" SourceUrl="file:///C:/midpoint-3.7/common/api-types-3.xsd" />
+    <MetadataFile FileName="common-3.xsd" MetadataType="Schema" ID="5a267008-475b-4c8a-9c6f-807ebf4f2816" SourceId="1" SourceUrl="file:///C:/midpoint-3.7/common/common-3.xsd" />
+    <MetadataFile FileName="types-3.xsd" MetadataType="Schema" ID="0adc370c-39b2-42a0-bd19-3b1a5b1c8809" SourceId="1" SourceUrl="file:///C:/midpoint-3.7/types-3.xsd" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>
