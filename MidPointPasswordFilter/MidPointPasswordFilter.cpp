@@ -17,29 +17,25 @@
 * Portions Copyright 2013 Salford Software Ltd
 **/
 
+
 #include "stdafx.h"
 #include <stdexcept>
-#include <shlobj.h>
-#include <string>
-#include <iostream>
-//#include <vcclr.h>
 #include <fstream>
+#include <shlobj.h>
 
 #include <windows.h> 
 #include <tchar.h>
 #include <stdio.h> 
 #include <strsafe.h>
 #include <winnt.h>
+#include <vector>
+#include <algorithm>
 
-#include "MidPointEncryption.h"
-#pragma comment(lib, "MidPointEncryption.lib")
+#include <string>
+#include <iostream>
+#include <string.h>
+#include <sstream>
 
-
-//#using <System.dll>
-
-//using namespace System;
-//using namespace System::IO;
-//using namespace System::Diagnostics;
 
 #ifndef STATUS_SUCCESS
 #define STATUS_SUCCESS                  ((NTSTATUS)0x00000000L)
@@ -58,7 +54,7 @@ HANDLE g_hChildStd_OUT_Wr = NULL;
 HANDLE g_hInputFile = NULL;
 
 bool CreateChildProcess(std::string password, HANDLE & processId, HANDLE & threadId);
-void ReadFromPipe(void);
+//void ReadFromPipe(void);
 
 /*...new */
 
@@ -89,7 +85,7 @@ bool fileExists(wchar_t *filename)
 
 void WriteLogger(std::string message, std::string filename)
 {
-	std::cout << "InitializeChangeNotify console";
+	std::cout << message;
 	WCHAR path[MAX_PATH];
 	if (SUCCEEDED(SHGetFolderPathW(NULL, CSIDL_PROFILE, NULL, 0, path))) {
 
@@ -103,8 +99,8 @@ void WriteLogger(std::string message, std::string filename)
 		std::basic_string<char> str = "\\" + filename + ".txt";
 		ss.append(str);
 
-		std::ofstream ofs(ss, std::ofstream::out|std::ofstream::app);
-		ofs << "InitializeChangeNotify";
+		std::ofstream ofs(ss, std::ofstream::out | std::ofstream::app);
+		ofs << message << std::endl;
 		ofs.close();
 	}
 }
@@ -116,8 +112,8 @@ BOOLEAN NTAPI InitializeChangeNotify()
 	WriteLogger("InitializeChangeNotify begin", "output20");
 
 	std::string test1 = "test";
-//	std::string test2 = MPEncryption::MPEncryptDecrypt::Encrypt(test1);
-//	std::cout << test2;
+	//	std::string test2 = MPEncryption::MPEncryptDecrypt::Encrypt(test1);
+	//	std::cout << test2;
 
 	WriteLogger("InitializeChangeNotify begin 2", "output20");
 
@@ -149,47 +145,44 @@ BOOLEAN NTAPI InitializeChangeNotify()
 
 
 	}
-	writeLog(L"Starting MidPointPasswordFilter", false);
+	wchar_t message[] = L"Starting MidPointPasswordFilter";
+	writeLog(message, false);
 
 	WriteLogger("InitializeChangeNotify END", "output1");
 
 	return true;
 }
 
-
-bool ReadLine(std::wstring & lineRead)
+/*
+bool ReadLines(std::vector<std::string> & list)
 {
-	WriteLogger("Readline BEGIN", "output1");
+WriteLogger("Readline BEGIN", "output1");
 
 
-	DWORD dwRead, dwWritten;
-	wchar_t chBuf[BUFSIZE / 2];
-	BOOL bSuccess = FALSE;
-	HANDLE hParentStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
 
-	//We have to read a line 
-	bSuccess = ReadFile(g_hChildStd_OUT_Rd, chBuf, BUFSIZE, &dwRead, NULL);
-	if (!bSuccess || dwRead == 0)
-		return 0;
+while (std::getline(data_stream, line, '\n')) {
 
-
-	//Read One Line 
-	wchar_t temp[BUFSIZE / 2];
-	temp[dwRead / 2 + 1] = '\0';
-	wmemcpy(temp, chBuf, dwRead);
-	lineRead.assign( temp);
-
-	WriteLogger("Readline END", "output1");
-
-	return dwRead;
+//Read One Line
+char temp[BUFSIZE / 2];
+temp[dwRead / 2 + 1] = '\0';
+memcpy(temp, chBuf, dwRead);
+std::string lineRead(temp);
+list.push_back(lineRead);
 }
+
+WriteLogger("Readline END", "output1");
+
+return dwRead;
+}
+*/
+
 
 bool CreateChildProcess(std::string password, HANDLE & processId, HANDLE & threadId)
 // Create a child process that uses the previously created pipes for STDIN and STDOUT.
 {
 	WriteLogger("CREATECHILDPROCESS BEGIN", "output1");
 
-	std::string temp = "\"C:\\Program Files\\Evolveum\\MidPoint Password Filter\\MidPointPasswordFilterEncryptor.exe\" ";
+	std::string temp = "\"C:\\temp\\MidPointPasswordFilterEncryptor.exe\" e ";
 	temp.append(password);
 
 	TCHAR * szCmdline = new TCHAR[temp.size() + 1];
@@ -226,6 +219,7 @@ bool CreateChildProcess(std::string password, HANDLE & processId, HANDLE & threa
 		&siStartInfo,  // STARTUPINFO pointer 
 		&piProcInfo);  // receives PROCESS_INFORMATION 
 
+	int value = GetLastError();
 	processId = piProcInfo.hProcess;
 	threadId = piProcInfo.hThread;
 
@@ -272,14 +266,18 @@ NTSTATUS NTAPI PasswordChangeNotify(PUNICODE_STRING UserName, ULONG RelativeId, 
 
 	WriteLogger("PasswordChangeNotify before copy username", "output21");
 
+
 	//copy username
 	int userLength = UserName->Length / sizeof(wchar_t);
 	wchar_t* username = (wchar_t*)malloc((userLength + 1) * sizeof(wchar_t));
 	wchar_t* z = wcsncpy(username, UserName->Buffer, userLength);
+
+
 	//set the last character to null
-	username[userLength] = NULL;
+	username[userLength] = '\0';
 	WriteLogger("PasswordChangeNotify after copy username", "output21");
 
+	std::wcout << username << std::endl;
 	//convert the password from widechar to utf-8
 	int passwordLength = NewPassword->Length / sizeof(wchar_t);
 	nLen = WideCharToMultiByte(CP_UTF8, 0, NewPassword->Buffer, passwordLength, 0, 0, 0, 0);
@@ -301,46 +299,66 @@ NTSTATUS NTAPI PasswordChangeNotify(PUNICODE_STRING UserName, ULONG RelativeId, 
 
 
 
-		/*
-			//Encrypt the password
-			StreamReader^ myStreamReader;
-			Process^ myProcess;
-			try
-			{
-				String^ encArgs = gcnew String(password);
-				encArgs = "e " + encArgs;
 
-				myProcess = gcnew Process;
-				myProcess->StartInfo->FileName = "C:\\Program Files\\Evolveum\\MidPoint Password Filter\\MidPointPasswordFilterEncryptor.exe";
-				myProcess->StartInfo->Arguments = encArgs;
-				myProcess->StartInfo->UseShellExecute = false;
-				myProcess->StartInfo->RedirectStandardOutput = true;
-				myProcess->Start();
-			}
-			*/
+		//Encrypt the password
+		//	StreamReader^ myStreamReader;
+		//	Process^ myProcess;
+		//	try
+		//	{
+		//		String^ encArgs = gcnew String(password);
+		//		encArgs = "e " + encArgs;
+
+		//		myProcess = gcnew Process;
+		//		myProcess->StartInfo->FileName = "C:\\Program Files\\Evolveum\\MidPoint Password Filter\\MidPointPasswordFilterEncryptor.exe";
+		//		myProcess->StartInfo->Arguments = encArgs;
+		//		myProcess->StartInfo->UseShellExecute = false;
+		//		myProcess->StartInfo->RedirectStandardOutput = true;
+		//		myProcess->Start();
+		//	}
 
 
-			// Read the standard output of the spawned process.
-	//		myStreamReader = myProcess->StandardOutput;
-	//		String^ line;
-	//		String^ encryptedString;
-	//		bool start = false;
-	//		bool end = false;
-	//		while (!end && (line = myStreamReader->ReadLine()))
-	//		{
+		// Read the standard output of the spawned process.
+		//		myStreamReader = myProcess->StandardOutput;
+		//		String^ line;
+		//		String^ encryptedString;
+		//		bool start = false;
+		//		bool end = false;
+		//		while (!end && (line = myStreamReader->ReadLine()))
+		//		{
 
-		std::wstring encryptedString;
-		std::wstring line;
+		std::string encryptedString;
+		std::vector<std::string> lines;
 		bool start = false;
 		bool end = false;
 		WriteLogger("Before ReadLine", "output21");
-		while (!end && ReadLine(line))
+
+
+		//Read the output stream encrypted file
+		DWORD dwRead;
+		char chBuf[BUFSIZE];
+		BOOL bSuccess = FALSE;
+		HANDLE hParentStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+
+		//We have to read a line 
+		bSuccess = ReadFile(g_hChildStd_OUT_Rd, chBuf, BUFSIZE, &dwRead, NULL);
+		if (!bSuccess || dwRead == 0)
+			return 0;
+
+		chBuf[dwRead] = '\0';
+		std::stringstream data_stream(chBuf);
+		std::string line;
+
+		while (!end && std::getline(data_stream, line, '\r'))
 		{
+
+			line.erase(std::remove(line.begin(), line.end(), '\n'), line.end());
+
 			WriteLogger("After ReadLine", "output21");
+			printf("\n===%s===\n", line.c_str());
 
 			if (start)
 			{
-				if (line == L"END ENCRYPTION")
+				if (line == "END ENCRYPTION")
 				{
 					// Found end tag - stop parsing encryptedString
 					// Don't want to add end tag to encryptedString
@@ -353,13 +371,15 @@ NTSTATUS NTAPI PasswordChangeNotify(PUNICODE_STRING UserName, ULONG RelativeId, 
 				}
 			}
 
-			if (line == L"START ENCRYPTION")
+			if (line == "START ENCRYPTION")
 			{
 				// Found start tag - must check this AFTER attempting to add to encryptedString 
 				// Otherwise the start tag would be added to the encryptedString
 				start = true;
 			}
 		}
+
+
 
 		WriteLogger("Before wait for single Object", "output21");
 		WaitForSingleObject(processHandle, 10000);
@@ -375,12 +395,14 @@ NTSTATUS NTAPI PasswordChangeNotify(PUNICODE_STRING UserName, ULONG RelativeId, 
 		WriteLogger("After close handle", "output21");
 
 
-		const wchar_t * encPwd = encryptedString.c_str();
+		wchar_t * encPwd = new wchar_t[encryptedString.length() + 1];
+		std::copy(encryptedString.begin(), encryptedString.end(), encPwd);
+		encPwd[encryptedString.length()] = 0;
+
 		size_t convertedChars = 0;
 		size_t  sizeInBytes = ((encryptedString.length() + 1) * 2);
 		errno_t err = 0;
-		char *cEncPwd = (char *)malloc(sizeInBytes);
-
+		char *cEncPwd = new char[sizeInBytes];
 
 		//		pin_ptr<const wchar_t> encPwd = PtrToStringChars(encryptedString);
 		//		size_t convertedChars = 0;
@@ -391,11 +413,11 @@ NTSTATUS NTAPI PasswordChangeNotify(PUNICODE_STRING UserName, ULONG RelativeId, 
 
 		//myProcess->WaitForExit();
 
-//		pin_ptr<const wchar_t> encPwd = PtrToStringChars(encryptedString);
-//		size_t convertedChars = 0;
-//		size_t  sizeInBytes = ((encryptedString->Length + 1) * 2);
-//		errno_t err = 0;
-//		char *cEncPwd = (char *)malloc(sizeInBytes);
+		//		pin_ptr<const wchar_t> encPwd = PtrToStringChars(encryptedString);
+		//		size_t convertedChars = 0;
+		//		size_t  sizeInBytes = ((encryptedString->Length + 1) * 2);
+		//		errno_t err = 0;
+		//		char *cEncPwd = (char *)malloc(sizeInBytes);
 
 		WriteLogger("Prepare sending message to log", "output21");
 
@@ -412,23 +434,30 @@ NTSTATUS NTAPI PasswordChangeNotify(PUNICODE_STRING UserName, ULONG RelativeId, 
 			WriteLogger("Before sending message to log", "output21");
 			if (writeLog(const_cast<wchar_t*>(message.c_str()), true))
 			{
-				writeMessageToLog(CHANGE_PASSWORD_MESSAGE, username);
+				wchar_t message[] = CHANGE_PASSWORD_MESSAGE;
+				writeMessageToLog(message, username);
 			}
 			else
 			{
-				writeLog(L"Error writing the credentials to file", false);
+				wchar_t message[] = L"Error writing the credentials to file";
+				writeLog(message, false);
 			}
 			WriteLogger("After sending message to log", "output21");
 
 		}
 		else
 		{
-			writeLog(L"Error processing the password", false);
+			wchar_t message[] = L"Error processing the password";
+			writeLog(message, false);
 		}
+		delete[] encPwd;
+		delete[] cEncPwd;
+
 	}
 	catch (std::exception const& e)
 	{
-		writeLog(L"Error Encrypting Password", false);
+		wchar_t message[] = L"Error Encrypting Password";
+		writeLog(message, false);
 	}
 
 	//zero the password
@@ -443,6 +472,7 @@ NTSTATUS NTAPI PasswordChangeNotify(PUNICODE_STRING UserName, ULONG RelativeId, 
 
 	WriteLogger("PasswordChangeNotify END", "output1");
 
+
 	return STATUS_SUCCESS;
 }
 
@@ -451,5 +481,4 @@ BOOLEAN NTAPI PasswordFilter(PUNICODE_STRING AccountName, PUNICODE_STRING FullNa
 {
 	return TRUE;
 }
-
 
