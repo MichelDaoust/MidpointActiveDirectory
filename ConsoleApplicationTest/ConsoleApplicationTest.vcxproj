@@ -159,7 +159,6 @@
   <ItemGroup>
     <ClCompile Include="ConsoleApplicationTest.cpp" />
     <ClCompile Include="log.cpp" />
-    <ClCompile Include="MidPointPasswordFilter.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
