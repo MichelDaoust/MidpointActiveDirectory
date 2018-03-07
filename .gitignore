@@ -24,3 +24,7 @@
 /MidPointPasswordFilterProcessor/bin/Release
 /MidPointPasswordFilterInstaller.CustomInstaller/bin/x86/Release
 /MidPointPasswordFilterInstaller.CustomInstaller/bin/x86/Debug
+/ConsoleApplicationTest/x64/Debug
+/MidPointEncryption/x64/Debug
+/MidPointPasswordFilterEncryptor/x64/Debug
+/MidPointPasswordFilterProcessor/bin/x64/Debug

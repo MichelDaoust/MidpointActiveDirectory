@@ -117,7 +117,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 					// Populate Data Out char array with nulls
 					char *szDataOut = new char[bufferSize];
-					std::fill(szDataOut, szDataOut + bufferSize + 1, '\0');
+					std::fill(szDataOut, szDataOut + bufferSize, '\0');
 
 					// Create Key
 					CRijndael oRijndael;
