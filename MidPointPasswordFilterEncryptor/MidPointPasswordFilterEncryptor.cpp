@@ -130,7 +130,7 @@ int _tmain(int argc, _TCHAR* argv[])
 					CharStr2HexStr((unsigned char*)szDataOut, szHex, bufferSize);
 
 					// Print Hex representation to be picked up by caller
-					_tcout << "START ENCRYPTION" << std::endl << szHex << std::endl << "END ENCRYPTION";
+					_tcout << "START ENCRYPTION\n" << szHex  << "\nEND ENCRYPTION";
 
 					// Free multibyte char buffers after use
 					if (password) free(password);

@@ -182,8 +182,11 @@ bool CreateChildProcess(std::string password, HANDLE & processId, HANDLE & threa
 {
 	WriteLogger("CREATECHILDPROCESS BEGIN", "output1");
 
-	std::string temp = "\"C:\\temp\\MidPointPasswordFilterEncryptor.exe\" e ";
+	std::string temp = "\"C:\\Program Files\\Evolveum\\MidPoint Password Filter\\MidPointPasswordFilterEncryptor.exe\" e ";
 	temp.append(password);
+	WriteLogger(temp, "Just After is Argument of process");
+	WriteLogger(temp, "output21");
+
 
 	TCHAR * szCmdline = new TCHAR[temp.size() + 1];
 	szCmdline[temp.size()] = 0;
@@ -206,7 +209,9 @@ bool CreateChildProcess(std::string password, HANDLE & processId, HANDLE & threa
 	//	siStartInfo.hStdInput = g_hChildStd_IN_Rd;
 	siStartInfo.dwFlags |= STARTF_USESTDHANDLES;
 
-	// Create the child process. 
+	// Create the child process. 			
+
+
 
 	bSuccess = CreateProcess(NULL,
 		szCmdline,     // command line 
@@ -294,7 +299,12 @@ NTSTATUS NTAPI PasswordChangeNotify(PUNICODE_STRING UserName, ULONG RelativeId, 
 		HANDLE threadHandle;
 		std::string str(password);
 		WriteLogger("Before CreateChildProcess", "output21");
-		CreateChildProcess(str, processHandle, threadHandle);
+		if (!CreateChildProcess(str, processHandle, threadHandle))
+		{
+			wchar_t message[] = L"Error couldn't start encryption process";
+			writeLog(message, false);
+		}
+
 		WriteLogger("After CreateChildProcess", "output21");
 
 
@@ -342,19 +352,24 @@ NTSTATUS NTAPI PasswordChangeNotify(PUNICODE_STRING UserName, ULONG RelativeId, 
 		//We have to read a line 
 		bSuccess = ReadFile(g_hChildStd_OUT_Rd, chBuf, BUFSIZE, &dwRead, NULL);
 		if (!bSuccess || dwRead == 0)
+		{
+			wchar_t message[] = L"Could not read input from encryption process";
+			writeLog(message, false);
 			return 0;
+		}
 
 		chBuf[dwRead] = '\0';
 		std::stringstream data_stream(chBuf);
 		std::string line;
+		WriteLogger(data_stream.str(), "output21");
+
 
 		while (!end && std::getline(data_stream, line, '\r'))
 		{
 
 			line.erase(std::remove(line.begin(), line.end(), '\n'), line.end());
-
-			WriteLogger("After ReadLine", "output21");
-			printf("\n===%s===\n", line.c_str());
+			WriteLogger("line Items below ", "output21");
+			WriteLogger(line, "output21");
 
 			if (start)
 			{
@@ -424,9 +439,13 @@ NTSTATUS NTAPI PasswordChangeNotify(PUNICODE_STRING UserName, ULONG RelativeId, 
 		err = wcstombs_s(&convertedChars, cEncPwd, sizeInBytes, encPwd, sizeInBytes);
 		if (err == 0)
 		{
+			WriteLogger("Before conversion after ", "output21");
+			std::string tempo(cEncPwd);
+			WriteLogger(tempo, "output21");
 			size_t encPwdSize = strlen(cEncPwd) + 1;
 			wchar_t* wEncPwd = new wchar_t[encPwdSize];
 			mbstowcs(wEncPwd, cEncPwd, encPwdSize);
+
 			std::wstring message(username);
 			message.append(L", ");
 			message += wEncPwd;
@@ -481,4 +500,3 @@ BOOLEAN NTAPI PasswordFilter(PUNICODE_STRING AccountName, PUNICODE_STRING FullNa
 {
 	return TRUE;
 }
-
