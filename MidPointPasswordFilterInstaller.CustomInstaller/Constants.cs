@@ -26,15 +26,15 @@ namespace MidPointPasswordFilterInstaller.CustomInstaller
         /// <summary>
         /// The path to encryptor exe in application folder.
         /// </summary>
-        public const string encryptorPath = @"C:\Program Files\Evolveum\MidPoint Password Filter\MidPointPasswordFilterEncryptor.exe";
+        public const string encryptorPath = @"C:\Program Files\VDM\MidPoint Password Filter\MidPointPasswordFilterEncryptor.exe";
         /// <summary>
         /// The path to processor exe in application folder.
         /// </summary>
-        public const string processorPath = @"C:\Program Files\Evolveum\MidPoint Password Filter\MidPointPasswordFilterProcessor.exe";
+        public const string processorPath = @"C:\Program Files\VDM\MidPoint Password Filter\MidPointPasswordFilterProcessor.exe";
         /// <summary>
         /// The path to processor config in application folder.
         /// </summary>
-        public const string configPath = @"C:\Program Files\Evolveum\MidPoint Password Filter\MidPointPasswordFilterProcessor.exe.config";
+        public const string configPath = @"C:\Program Files\VDM\MidPoint Password Filter\MidPointPasswordFilterProcessor.exe.config";
         /// <summary>
         /// The path to filter dll in system32 folder. This is in system32 so that registry can find it on system start up.
         /// </summary>

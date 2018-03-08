@@ -75,6 +75,7 @@ namespace MidPointPasswordFilterInstaller.CustomInstaller
             base.Commit(savedState);
             try
             {
+
                 XmlDocument xmldoc = new XmlDocument();
                 xmldoc.Load(Constants.configPath);
                 XmlNode node = xmldoc.DocumentElement;
@@ -124,6 +125,7 @@ namespace MidPointPasswordFilterInstaller.CustomInstaller
 
                 xmldoc.Save(Constants.configPath);
 
+    
                 try
                 {
                     // Add the password filter dll to registry
@@ -143,6 +145,7 @@ namespace MidPointPasswordFilterInstaller.CustomInstaller
                 {
                     throw new InstallException("Unable to modify registry: '" + ex.Message + "'");
                 }
+
             }
             catch (Exception ex)
             {
