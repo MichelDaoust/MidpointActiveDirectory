@@ -34,10 +34,10 @@ namespace PasswordFilterProcessor
         private const string COMMON_PATH = "path";
         private const string COMMON_VALUE = "value";
         private const string CLEAR_VALUE = "clearValue";
-//mic                private static readonly string ADM_USERNAME = Encryptor.Decrypt(ConfigurationManager.AppSettings["AdminUserName"]);
-//mic                private static readonly string ADM_PASSWORD = Encryptor.Decrypt(ConfigurationManager.AppSettings["AdminPassword"]);
-        private static readonly string ADM_USERNAME = ConfigurationManager.AppSettings["AdminUserName"];
-        private static readonly string ADM_PASSWORD = ConfigurationManager.AppSettings["AdminPassword"];
+        private static readonly string ADM_USERNAME = Encryptor.Decrypt(ConfigurationManager.AppSettings["AdminUserName"]);
+        private static readonly string ADM_PASSWORD = Encryptor.Decrypt(ConfigurationManager.AppSettings["AdminPassword"]);
+//        private static readonly string ADM_USERNAME = ConfigurationManager.AppSettings["AdminUserName"];
+//        private static readonly string ADM_PASSWORD = ConfigurationManager.AppSettings["AdminPassword"];
         private static readonly string DEFAULT_ENDPOINT_URL = ConfigurationManager.AppSettings["DefaultEndpoint"];
 
         private static XmlQualifiedName USER_TYPE = new XmlQualifiedName("UserType", NS_COMMON);

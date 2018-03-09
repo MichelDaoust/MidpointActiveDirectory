@@ -52,10 +52,8 @@ namespace MidPointPasswordFilterInstaller.CustomInstaller
         /// <returns>The associated ciphertext.</returns>
         public static string Encrypt(string plaintext)
         {
-
-            return StringCipher.Encrypt(plaintext, "Super Key");
-
-            //            return RunEncryptorFile(true, plaintext);
+          //  return StringCipher.Encrypt(plaintext, "Super Key");
+          return RunEncryptorFile(true, plaintext);
         }
 
         /// <summary>
@@ -65,12 +63,11 @@ namespace MidPointPasswordFilterInstaller.CustomInstaller
         /// <returns>The associated plaintext string.</returns>
         public static string Decrypt(string ciphertext)
         {
-            return StringCipher.Decrypt(ciphertext, "Super Key");
-
-            //            return RunEncryptorFile(false, ciphertext);
+           // return StringCipher.Decrypt(ciphertext, "Super Key");
+           return RunEncryptorFile(false, ciphertext);
         }
 
-/*
+
         private static string RunEncryptorFile(bool encrypting, string inputString)
         {
             string startTag = (encrypting) ? startEncryptionTag : startEncryptionTag;
@@ -129,7 +126,7 @@ namespace MidPointPasswordFilterInstaller.CustomInstaller
 
             return newPassword;
         }
-*/
+
     }
 
 
