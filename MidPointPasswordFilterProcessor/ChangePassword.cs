@@ -19,7 +19,6 @@ using System;
 using System.Configuration;
 using System.ServiceModel;
 using System.Xml;
-using PasswordFilterProcessor.MidpointModelWebService;
 using PasswordFilterProcessor.MidpointModel3WebService;
 
 // Author Matthew Wright
@@ -35,17 +34,56 @@ namespace PasswordFilterProcessor
         private const string COMMON_PATH = "path";
         private const string COMMON_VALUE = "value";
         private const string CLEAR_VALUE = "clearValue";
-                private static readonly string ADM_USERNAME = Encryptor.Decrypt(ConfigurationManager.AppSettings["AdminUserName"]);
-                private static readonly string ADM_PASSWORD = Encryptor.Decrypt(ConfigurationManager.AppSettings["AdminPassword"]);
-//        private static readonly string ADM_USERNAME = ConfigurationManager.AppSettings["AdminUserName"];
-//        private static readonly string ADM_PASSWORD = ConfigurationManager.AppSettings["AdminPassword"];
+//mic                private static readonly string ADM_USERNAME = Encryptor.Decrypt(ConfigurationManager.AppSettings["AdminUserName"]);
+//mic                private static readonly string ADM_PASSWORD = Encryptor.Decrypt(ConfigurationManager.AppSettings["AdminPassword"]);
+        private static readonly string ADM_USERNAME = ConfigurationManager.AppSettings["AdminUserName"];
+        private static readonly string ADM_PASSWORD = ConfigurationManager.AppSettings["AdminPassword"];
         private static readonly string DEFAULT_ENDPOINT_URL = ConfigurationManager.AppSettings["DefaultEndpoint"];
+
+        private static XmlQualifiedName USER_TYPE = new XmlQualifiedName("UserType", NS_COMMON);
 
 
 
         #endregion
 
 
+        private static ItemPathType createItemPathType(string path)
+        {
+            ItemPathType rv = new ItemPathType();
+            rv.Value = "declare default namespace '" + NS_COMMON + "'; " + path;
+            return rv;
+        }
+
+
+        private static SearchFilterType createNameFilter(String name)
+        {
+            PropertyComplexValueFilterClauseType clause = new PropertyComplexValueFilterClauseType();
+            clause.path = createItemPathType("name");
+            clause.Items = new Object[] { name } ;
+
+            SearchFilterType filter = new SearchFilterType();
+            filter.Item = clause;
+            filter.ItemElementName = ItemChoiceType1.equal;
+            return filter;
+        }
+
+
+        private static MidpointModel3WebService.ObjectType getOneObject(MidpointModel3WebService.searchObjectsResponse response, String name)
+        {
+            MidpointModel3WebService.ObjectType[] objects = response.objectList.@object;
+            if (objects == null || objects.Length == 0)
+            {
+                return null;
+            }
+            else if (objects.Length == 1)
+            {
+                return (MidpointModel3WebService.ObjectType)objects[0];
+            }
+            else
+            {
+                throw new InvalidOperationException("Expected to find a object with name '" + name + "' but found " + objects.Length + " ones instead");
+            }
+        }
 
 
         /// <summary>
@@ -55,56 +93,64 @@ namespace PasswordFilterProcessor
         /// <param name="modelPort">The model port used to run search Midpoint.</param>
         /// <param name="username">The username to search for.</param>
         /// <returns>The UserType object for the requested user, or null if not found.</returns>
-        public static MidpointModel3WebService.UserType searchUserByName2(MidpointModel3WebService.modelPortType modelPort, string username)
+
+        public static MidpointModel3WebService.UserType searchUserByName(MidpointModel3WebService.modelPortType modelPort, String username)
         {
-            XmlElement filter = parseElement(
-                            "<equal xmlns='" + SEARCHUSER_NS + "' xmlns:c='" + NS_COMMON + "' >" +
-                                "<path>c:name</path>" +
-                                "<value>" + username + "</value>" +
-                            "</equal>"
-            );
-
-
             MidpointModel3WebService.QueryType query = new MidpointModel3WebService.QueryType();
-            // Set filter value - webservices name is apparently 'Any'?
-            SearchFilterType sft = new SearchFilterType();
-            FilterClauseType fct = new FilterClauseType();
-            fct.matching = filter.InnerXml;
-            sft.Item = fct;
-            query.filter = sft;
-            // Create an empty array since it can't be uninitialised
-            SelectorQualifiedGetOptionType[] options = new SelectorQualifiedGetOptionType[0];
+            query.filter = createNameFilter(username);
 
-
-
-            XmlQualifiedName xqn = new XmlQualifiedName(new MidpointModel3WebService.UserType().GetType().Name, NS_COMMON);
-            MidpointModel3WebService.searchObjects request = new MidpointModel3WebService.searchObjects(xqn, query, options);
+            MidpointModel3WebService.searchObjects request = new MidpointModel3WebService.searchObjects(USER_TYPE, query, null);
             MidpointModel3WebService.searchObjectsResponse response = modelPort.searchObjects(request);
+            return (MidpointModel3WebService.UserType)getOneObject(response, username);
+        }
 
-            MidpointModel3WebService.ObjectListType objectList = response.objectList;
-            MidpointModel3WebService.ObjectType[] objects = objectList.@object;
 
-            if (objects != null)
+        private static ProtectedStringType createProtectedStringType(string clearValue)
+        {
+            ProtectedStringType rv = new ProtectedStringType();
+            rv.clearValue = clearValue;
+            return rv;
+        }
+
+
+        public static void changeUserPassword(modelPortType modelPort, String oid, String newPassword)
+        {
+            ItemDeltaType passwordDelta = new ItemDeltaType();
+            passwordDelta.modificationType = ModificationTypeType.replace;
+            passwordDelta.path = createItemPathType("credentials/password/value");
+            passwordDelta.value = new object[] { createProtectedStringType(newPassword) };
+
+            ObjectDeltaType deltaType = new ObjectDeltaType();
+            deltaType.objectType = USER_TYPE;
+            deltaType.changeType = ChangeTypeType.modify;
+            deltaType.oid = oid;
+            deltaType.itemDelta = new ItemDeltaType[] { passwordDelta };
+
+            executeChanges request = new executeChanges(new ObjectDeltaType[] { deltaType }, null);
+            executeChangesResponse response = modelPort.executeChanges(request);
+            check(response);
+        }
+
+        private static void check(executeChangesResponse response)
+        {
+            foreach (ObjectDeltaOperationType objectDeltaOperation in response.deltaOperationList)
             {
-                switch (objects.Length)
+                if (!OperationResultStatusType.success.Equals(objectDeltaOperation.executionResult.status))
                 {
-                    case 0:
-                        return null;
-                    case 1:
-                        return (MidpointModel3WebService.UserType)objects[0];
-                    default:
-                        throw new ArgumentException("Expected to find a single user with username '" + username + "' but found " + objects.Length + " users instead");
+                    Console.WriteLine("*** Operation result = " + objectDeltaOperation.executionResult.status + ": "
+                        + objectDeltaOperation.executionResult.message);
                 }
-            }
-            else
-            {
-                return null;
             }
         }
 
 
+
         #region Public Methods
 
+
+
+
+/*
         public static void changeUserPassword2(MidpointModel3WebService.modelPortType modelPort, string oid, string newPassword)
         {
 
@@ -140,10 +186,12 @@ namespace PasswordFilterProcessor
 
             MidpointModel3WebService.executeChanges request = new executeChanges(odt, meot);
             executeChangesResponse response = modelPort.executeChanges(request);
+            response.deltaOperationList[]
 
             System.Console.WriteLine("Result: '" + response.deltaOperationList.Length.ToString() + "' for user oid: '" + oid + "'");
         }
 
+*/
 
 
 

@@ -33,6 +33,7 @@ namespace PasswordFilterProcessor
 
         public object BeforeSendRequest(ref Message request, IClientChannel channel)
         {
+
             if (Headers != null)
             {
                 for (int i = Headers.Length - 1; i >= 0; i--)
@@ -41,6 +42,14 @@ namespace PasswordFilterProcessor
                 }
             }
 
+            /*
+            //Remove Action MustUnderstood
+            int headerIndexOfAction = request.Headers.FindHeader("Action", "http://schemas.microsoft.com/ws/2005/05/addressing/none");
+            if (headerIndexOfAction > -1) 
+            {
+                request.Headers.RemoveAt(headerIndexOfAction);
+            }
+            */
             return request;
         }
 

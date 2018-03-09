@@ -26,7 +26,7 @@ namespace PasswordFilterProcessor
         /// <summary>
         /// The full path to the password encryptor.
         /// </summary>
-        const string encryptorFile = @"C:\Program Files\Evolveum\MidPoint Password Filter\MidPointPasswordFilterEncryptor.exe";
+        const string encryptorFile = @"C:\Program Files\VDM\MidPoint Password Filter\MidPointPasswordFilterEncryptor.exe";
         /// <summary>
         /// This tag marks the start of the encrypted password string in encryptor stdout.
         /// </summary>
@@ -67,8 +67,8 @@ namespace PasswordFilterProcessor
 
         private static string RunEncryptorFile(bool encrypting, string inputString)
         {
-            string startTag = (encrypting) ? startEncryptionTag : startEncryptionTag;
-            string endTag = (encrypting) ? endEncryptionTag : endEncryptionTag;
+            string startTag = (encrypting) ? startEncryptionTag : startDecryptionTag;
+            string endTag = (encrypting) ? endEncryptionTag : endDecryptionTag;
 
             //Set mode - must have space after e/d to separate from next argument
             string mode = (encrypting) ? "e " : "d ";

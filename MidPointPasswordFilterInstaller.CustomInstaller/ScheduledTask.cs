@@ -41,7 +41,7 @@ namespace MidPointPasswordFilterInstaller.CustomInstaller
                 DateTime start = DateTime.Today + TimeSpan.FromHours(1);
                 td.Triggers.Add(new DailyTrigger { StartBoundary = start, DaysInterval = 1 });
 
-                // Create an action that will launch Notepad whenever the trigger fires
+                // Create an action that will launch Enc whenever the trigger fires
                 td.Actions.Add(new ExecAction(Constants.processorPath, null, null));
 
                 // Register the task in the root folder

@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security.AccessControl;
 using System.Security.Principal;
-using PasswordFilterProcessor.MidpointModelWebService;
 using PasswordFilterProcessor.MidpointModel3WebService;
 
 // Author Matthew Wright
@@ -88,7 +87,7 @@ namespace PasswordFilterProcessor
         #endregion
 
 
-
+/*
         static void Main(string[] args)
         {
 
@@ -98,11 +97,12 @@ namespace PasswordFilterProcessor
 
             string newPassword = Password;
             MidpointModel3WebService.modelPortType modelPort = ChangePassword.createModelPort(args);
-            MidpointModel3WebService.UserType user = ChangePassword.searchUserByName2(modelPort, UserName);
-            ChangePassword.changeUserPassword2(modelPort, user.oid, newPassword);
+            MidpointModel3WebService.UserType user = ChangePassword.searchUserByName(modelPort, UserName);
+            ChangePassword.changeUserPassword(modelPort, user.oid, newPassword);
         }
+*/
 
-/*
+
         static void Main(string[] args)
         {
             try
@@ -162,7 +162,7 @@ namespace PasswordFilterProcessor
                         if (!update.IsProcessed)
                         {
                             string newPassword = Encryptor.Decrypt(update.Password);
-                            modelPortType modelPort = ChangePassword.createModelPort(args);
+                            MidpointModel3WebService.modelPortType modelPort = ChangePassword.createModelPort(args);
                             UserType user = ChangePassword.searchUserByName(modelPort, update.UserName);
                             ChangePassword.changeUserPassword(modelPort, user.oid, newPassword);
                         }
@@ -192,7 +192,7 @@ namespace PasswordFilterProcessor
                 LogError(ex.Message);
             }
         }
-*/
+
 
         /// <summary>
         /// Parses the given update details file and returns a corresponding UpdateDetails object.

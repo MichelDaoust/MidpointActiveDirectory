@@ -52,7 +52,8 @@ namespace PasswordFilterProcessor
         {
             var nonce = new byte[64];
             RandomNumberGenerator.Create().GetBytes(nonce);
-            string created = DateTime.Now.ToString("yyyy-MM-ddThh:mm:ss.msZ");
+            //            string created = DateTime.Now.ToString("yyyy-MM-ddThh:mm:ssZ");
+            string created = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ");
 
             writer.WriteStartElement("wsse", "UsernameToken", null);
             writer.WriteAttributeString("wsu:Id", "UsernameToken-1");
