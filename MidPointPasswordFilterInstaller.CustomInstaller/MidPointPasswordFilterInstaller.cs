@@ -32,7 +32,7 @@ namespace MidPointPasswordFilterInstaller.CustomInstaller
         /// <summary>
         /// The relative path to model wsdl in Midpoint. Should be appended to server URL.
         /// </summary>
-        private const string modelWsdlPath = "/midpoint/model/model-1";
+        private const string modelWsdlPath = "/midpoint/ws/model-3";
         /// <summary>
         /// The query string for wsdl in Midpoint. Should be appended to default endpoint address URL.
         /// </summary>
@@ -85,7 +85,8 @@ namespace MidPointPasswordFilterInstaller.CustomInstaller
                 string Password = Context.Parameters["ADMINPASSWORD"];
 
                 // Need to trim trailing slashes as the wsdlPath starts with one
-                string bindingURL = EndpointURL.Trim().TrimEnd(new char[] { '\\', '/' }) + modelWsdlPath;
+                string URL = EndpointURL.Trim().TrimEnd(new char[] { '\\', '/' });
+                string bindingURL = modelWsdlPath;
                 string fullURL = bindingURL + wsdlQuery;
 
                 foreach (XmlNode rootNode in node.ChildNodes)
@@ -97,7 +98,7 @@ namespace MidPointPasswordFilterInstaller.CustomInstaller
                             switch (childNode.Attributes.GetNamedItem("key").Value)
                             {
                                 case "DefaultEndpoint":
-                                    childNode.Attributes.GetNamedItem("value").Value = string.IsNullOrEmpty(fullURL) ? "" : fullURL;
+                                    childNode.Attributes.GetNamedItem("value").Value = string.IsNullOrEmpty(URL) ? "" : URL;
                                     break;
                                 case "AdminUserName":
                                     childNode.Attributes.GetNamedItem("value").Value = string.IsNullOrEmpty(UserName.Trim()) ? "null" : Encryptor.Encrypt(UserName);
